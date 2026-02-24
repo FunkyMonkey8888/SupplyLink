@@ -50,14 +50,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/warehouse")
 public class WarehouseController {
 
-    private final WarehouseService warehouseServiceJpa;
+    private final WarehouseServiceImplJpa warehouseServiceJpa;
 
     @Autowired
     public WarehouseController(WarehouseServiceImplJpa warehouseServiceJpa) {
@@ -67,7 +67,7 @@ public class WarehouseController {
 
     @GetMapping
     public ResponseEntity<List<Warehouse>> getAllWarehouses() {
-        return ResponseEntity.ok(warehouseServiceJpa.getAllWarehouses());
+        return ResponseEntity.status(200).body(warehouseServiceJpa.getAllWarehouses());
     }
 
 
@@ -75,9 +75,9 @@ public class WarehouseController {
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable int warehouseId) {
         Warehouse w = warehouseServiceJpa.getWarehouseById(warehouseId);
         if (w == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.ok(w);
+        return ResponseEntity.status(200).body(w);
     }
 
     @PostMapping
@@ -105,5 +105,10 @@ public class WarehouseController {
     public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId) {
         List<Warehouse> list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
         return ResponseEntity.ok(list);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleException(RuntimeException e){
+        return ResponseEntity.status(500).body(e.toString());
     }
 }

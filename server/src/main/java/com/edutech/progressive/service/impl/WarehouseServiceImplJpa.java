@@ -8,7 +8,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.edutech.progressive.entity.Warehouse;
+import com.edutech.progressive.entity.Supplier;
+import com.edutech.progressive.entity.*;
+import com.edutech.progressive.repository.ProductRepository;
+import com.edutech.progressive.repository.SupplierRepository;
 import com.edutech.progressive.repository.WarehouseRepository;
 import com.edutech.progressive.service.WarehouseService;
 
@@ -17,12 +20,10 @@ import com.edutech.progressive.service.WarehouseService;
 public class WarehouseServiceImplJpa implements WarehouseService  {
 
 
-
+    private SupplierRepository supplierRepository;
     private WarehouseRepository warehouseRepository;
+    private ProductRepository productRepository;
     
-    // public WarehouseServiceImplJpa() {
-    // }
-
     
     @Autowired
     public WarehouseServiceImplJpa(WarehouseRepository warehouseRepository) {
@@ -43,6 +44,11 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
     public int addWarehouse(Warehouse warehouse) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'addWarehouse'");
+
+        
+        // Supplier supplier = supplierRepository.findById(warehouse.supplierId)
+        // .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + dto.supplierId));
+
         return warehouseRepository.save(warehouse)!= null ? warehouse.getWarehouseId() :-1;
     }
 
@@ -68,14 +74,15 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
         existing.setWarehouseName(warehouse.getWarehouseName());
         existing.setLocation(warehouse.getLocation());
         existing.setCapacity(warehouse.getCapacity());
+        existing.setSupplier(warehouse.getSupplier());
 
         
-        try {
+        // try {
        
-            existing.setSupplierId(warehouse.getSupplierId());
-        } catch (NoSuchMethodError | Exception ignored) {
+        //     existing.setSupplierId(warehouse.getSupplierId());
+        // } catch (NoSuchMethodError | Exception ignored) {
         
-        }
+        // }
 
         warehouseRepository.save(existing);
     }
@@ -83,11 +90,28 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
 
     
     @Override
+    // @Transactional(readOnly = true)
     public List<Warehouse> getWarehouseBySupplier(int supplierId) {
-        // repository method name matches property path: supplier.supplierId
+
         return warehouseRepository.findAllBySupplier_SupplierId(supplierId);
     }
 
+    public  void deleteWarehouse(int supplierId) {
+        // warehouseRepository.deleteById(warehouseId);
+        // List<Warehouse> warehouseBySuppliers = getWarehouseBySupplier(supplierId);
+        // List<Product> warehousesForProduct = productRepository.findAllByWarehouse_WarehouseId(warehouseId);
+        // productRepository.deleteByWarehouse_Supplier_SupplierId(supplierId);
+        productRepository.deleteByWarehouse_WarehouseId(supplierId);
+        warehouseRepository.deleteById(supplierId);
+        // warehouseRepository.deleteBySupplier_SupplierId(supplierId);;
+    }
+
+    public  Warehouse getWarehouseById(int warehouseId) {
+        return warehouseRepository.findById(warehouseId).orElseThrow();
+    }
+
+    //Do not implement these methods in WarehouseServiceImplArraylist.java and WarehouseServiceImplJdbc.java class
+    // public void deleteWarehouse()
 
 
 }

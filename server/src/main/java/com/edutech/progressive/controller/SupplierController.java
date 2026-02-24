@@ -1,10 +1,12 @@
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Supplier;
+import com.edutech.progressive.entity.Warehouse;
 import com.edutech.progressive.service.SupplierService;
 import com.edutech.progressive.service.impl.SupplierServiceImplArraylist;
 import com.edutech.progressive.service.impl.SupplierServiceImplJdbc;
 import com.edutech.progressive.service.impl.SupplierServiceImplJpa;
+import com.edutech.progressive.service.impl.WarehouseServiceImplJpa;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,30 +69,30 @@ public class SupplierController {
 
     private final SupplierServiceImplJpa supplierServiceJpa;
     private final SupplierService supplierServiceArraylist;
-    private final SupplierService supplierServiceJdbc;
 
-    @Autowired
-    public SupplierController(
-            @Qualifier("supplierServiceJpa") SupplierServiceImplJpa supplierServiceJpa,
-            @Qualifier("supplierServiceArraylist") SupplierServiceImplArraylist supplierServiceArraylist,
-            @Qualifier("supplierServiceJdbc") SupplierServiceImplJdbc supplierServiceImplJdbc
-    ) {
+    private final WarehouseServiceImplJpa warehouseServiceJpa;
+
+
+    
+
+@Autowired
+    public SupplierController(SupplierServiceImplJpa supplierServiceJpa, SupplierService supplierServiceArraylist, WarehouseServiceImplJpa warehouseServiceImplJpa) {
         this.supplierServiceJpa = supplierServiceJpa;
         this.supplierServiceArraylist = supplierServiceArraylist;
-        this.supplierServiceJdbc = supplierServiceImplJdbc;
+        this.warehouseServiceJpa = warehouseServiceImplJpa;
     }
 
 
     @GetMapping
     public ResponseEntity<List<Supplier>> getAllSuppliers() {
-        List<Supplier> list = supplierServiceJdbc.getAllSuppliers();
+        List<Supplier> list = supplierServiceJpa.getAllSuppliers();
         return ResponseEntity.ok(list);
     }
 
 
     @GetMapping("/{supplierId}")
     public ResponseEntity<Supplier> getSupplierById(@PathVariable int supplierId) {
-        Supplier supplier = supplierServiceJdbc.getSupplierById(supplierId);
+        Supplier supplier = supplierServiceJpa.getSupplierById(supplierId);
         if (supplier == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -145,5 +147,16 @@ public class SupplierController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleException(RuntimeException e){
         return ResponseEntity.status(500).body(e.toString());
+    }
+
+    @GetMapping("/warehouse")
+    public ResponseEntity<List<Warehouse>> getAllWarehouse(){
+        return ResponseEntity.status(200).body(warehouseServiceJpa.getAllWarehouses());
+    }
+
+    @GetMapping("/{supplierId}/warehouse")
+    public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId) {
+        List<Warehouse> list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
+        return ResponseEntity.ok(list);
     }
 }

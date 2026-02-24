@@ -12,7 +12,7 @@ import com.edutech.progressive.entity.Warehouse;
 import com.edutech.progressive.service.WarehouseService;
 
 
-@Service("warehouseServiceJdbc")
+// @Service("warehouseServiceJdbc")
 public class WarehouseServiceImplJdbc  implements WarehouseService {
 
 

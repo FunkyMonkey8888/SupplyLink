@@ -1,5 +1,8 @@
 package com.edutech.progressive.entity;
 
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,14 +14,23 @@ import javax.persistence.Table;
 public class Supplier implements Comparable<Supplier> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "supplier_id")
     private int supplierId;
+    @Column(name = "supplier_name", nullable = false)
     private String supplierName;
+    @Column(name = "email", nullable = false)
     private String email;
+    @Column(name = "phone")
     private String phone;
+    @Column(name = "username", nullable = false)
     private String username;
+    @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "role")
     private String role;
+    @Column(name = "address")
     private String address;
+
     public Supplier(int supplierId, String supplierName, String email, String phone, String username, String password,
             String role, String address) {
         this.supplierId = supplierId;

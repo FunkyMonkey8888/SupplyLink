@@ -1,7 +1,16 @@
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Product;
+import com.edutech.progressive.service.impl.ProductServiceImplJpa;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,27 +21,45 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+    private final ProductServiceImplJpa productServiceImplJpa;
+    @Autowired
+    public ProductController(ProductServiceImplJpa productServiceImplJpa) {
+        this.productServiceImplJpa = productServiceImplJpa;
+    }
+
+    @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
-        return null;
+        return ResponseEntity.status(200).body(productServiceImplJpa.getAllProducts());
     }
 
-    public ResponseEntity<Product> getProductById(int productId) {
-        return null;
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable int productId) {
+        return ResponseEntity.status(200).body(productServiceImplJpa.getProductById(productId));
     }
 
-    public ResponseEntity<Integer> addProduct(Product product) {
-        return null;
+    @PostMapping
+    public ResponseEntity<Integer> addProduct(@RequestBody Product product) {
+        return ResponseEntity.status(201).body(productServiceImplJpa.addProduct(product));
     }
 
-    public ResponseEntity<Void> updateProduct(int productId, Product product) {
-        return null;
+   @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable int productId, @RequestBody Product product) {
+        Product p  = productServiceImplJpa.getProductById(productId);
+        productServiceImplJpa.updateProduct(p);
+        return ResponseEntity.status(204).body(null);
     }
 
-    public ResponseEntity<Void> deleteProduct(int productId) {
-        return null;
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int productId) {
+        // Product  p = productServiceImplJpa.getProductById(productId);
+
+        // productServiceImplJpa.deleteProduct(p.getWarehouse().getWarehouseId());
+        productServiceImplJpa.deleteProduct(productId);
+        return ResponseEntity.status(204).build();
     }
 
-    public ResponseEntity<List<Product>> getAllProductByWarehouse(int warehouseId) {
-        return null;
+    @GetMapping("/warehouse/{warehouseId}")
+    public ResponseEntity<List<Product>> getAllProductByWarehouse(@PathVariable int warehouseId) {
+        return ResponseEntity.status(200).body(productServiceImplJpa.getAllProductByWarehouse(warehouseId));
     }
 }

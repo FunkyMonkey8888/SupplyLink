@@ -11,7 +11,7 @@ import com.edutech.progressive.dao.SupplierDAO;
 import com.edutech.progressive.entity.Supplier;
 import com.edutech.progressive.service.SupplierService;
 
-@Service("supplierServiceJdbc")
+// @Service("supplierServiceJdbc")
 public class SupplierServiceImplJdbc  implements SupplierService{
 
 
