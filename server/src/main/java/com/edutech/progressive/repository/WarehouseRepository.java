@@ -14,7 +14,6 @@ import com.edutech.progressive.entity.Warehouse;
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>{
 
-
     List<Warehouse> findAllBySupplier_SupplierId(int supplierId);
     
 
