@@ -1,4 +1,25 @@
 package com.edutech.progressive.exception;
 
-public class SupplierDoesNotExistException {
+public class SupplierDoesNotExistException extends RuntimeException {
+
+    public SupplierDoesNotExistException() {
+    }
+
+    public SupplierDoesNotExistException(String message) {
+        super(message);
+    }
+
+    public SupplierDoesNotExistException(Throwable cause) {
+        super(cause);
+    }
+
+    public SupplierDoesNotExistException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public SupplierDoesNotExistException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+    
 }

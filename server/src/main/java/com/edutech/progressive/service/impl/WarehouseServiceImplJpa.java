@@ -6,10 +6,13 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import com.edutech.progressive.entity.Supplier;
 import com.edutech.progressive.entity.*;
+import com.edutech.progressive.exception.NoWarehouseFoundForSupplierException;
 import com.edutech.progressive.repository.ProductRepository;
 import com.edutech.progressive.repository.SupplierRepository;
 import com.edutech.progressive.repository.WarehouseRepository;
@@ -48,6 +51,7 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
         
         // Supplier supplier = supplierRepository.findById(warehouse.supplierId)
         // .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + dto.supplierId));
+    
 
         return warehouseRepository.save(warehouse)!= null ? warehouse.getWarehouseId() :-1;
     }
@@ -91,10 +95,15 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
     
     @Override
     // @Transactional(readOnly = true)
-    public List<Warehouse> getWarehouseBySupplier(int supplierId) {
+    public List<Warehouse> getWarehouseBySupplier(int supplierId) throws NoWarehouseFoundForSupplierException {
 
-        return warehouseRepository.findAllBySupplier_SupplierId(supplierId);
+        List<Warehouse> w = warehouseRepository.findAllBySupplier_SupplierId(supplierId);
+        if(w==null || w.isEmpty()) throw new NoWarehouseFoundForSupplierException("null");
+        return w;
     }
+
+    
+
 
     public  void deleteWarehouse(int supplierId) {
         // warehouseRepository.deleteById(warehouseId);

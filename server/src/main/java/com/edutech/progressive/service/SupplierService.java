@@ -2,6 +2,8 @@ package com.edutech.progressive.service;
 
 
 import com.edutech.progressive.entity.Supplier;
+import com.edutech.progressive.exception.SupplierAlreadyExistsException;
+import com.edutech.progressive.exception.SupplierDoesNotExistException;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 public interface SupplierService {
     List<Supplier> getAllSuppliers();
 
-    int addSupplier(Supplier supplier);
+    int addSupplier(Supplier supplier) throws SupplierAlreadyExistsException;
 
     List<Supplier> getAllSuppliersSortedByName();
 
@@ -23,10 +25,10 @@ public interface SupplierService {
     default void updateSupplier(Supplier supplier) {
     }
 
-    default void deleteSupplier(int supplierId) {
+    default void deleteSupplier(int supplierId) throws SupplierDoesNotExistException {
     }
 
-    default Supplier getSupplierById(int supplierId) {
+    default Supplier getSupplierById(int supplierId) throws SupplierDoesNotExistException {
         return null;
     }
 

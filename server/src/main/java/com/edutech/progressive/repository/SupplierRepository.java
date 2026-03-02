@@ -9,8 +9,19 @@ import com.edutech.progressive.entity.Supplier;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
 
+    
     void deleteBySupplierId(@Param("supplierId")int supplierId);
 
     Supplier findBySupplierId(@Param("supplierId")int supplierId);
+
+    boolean existsByEmailIgnoreCase(@Param("email") String email);
+
+    boolean existsByUsernameIgnoreCase(@Param("username") String username);
+
+    boolean existsBySupplierNameIgnoreCase(@Param("supplier_name") String supplierName);
+
+    boolean existsByEmailIgnoreCaseAndSupplierIdNot(String email, int id);
+
+    boolean existsByUsernameIgnoreCaseAndSupplierIdNot(String username, int id);
 
 }

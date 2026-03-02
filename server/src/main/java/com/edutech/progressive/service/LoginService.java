@@ -1,14 +1,30 @@
 package com.edutech.progressive.service;
 
 import com.edutech.progressive.entity.Supplier;
+import com.edutech.progressive.repository.SupplierRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
 
+
+@Service
 public class LoginService implements UserDetailsService {
 
+    private final SupplierRepository supplierRepository;
+
+
+    
+
+    public LoginService(SupplierRepository supplierRepository) {
+        this.supplierRepository = supplierRepository;
+    }
+
+    // @GetMapping
     public List<Supplier> getAllUsers() {
         return null;
     }

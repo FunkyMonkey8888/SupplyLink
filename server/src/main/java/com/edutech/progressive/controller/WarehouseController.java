@@ -1,10 +1,12 @@
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Warehouse;
+import com.edutech.progressive.exception.NoWarehouseFoundForSupplierException;
 import com.edutech.progressive.service.WarehouseService;
 import com.edutech.progressive.service.impl.WarehouseServiceImplJpa;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,12 +68,14 @@ public class WarehouseController {
 
 
     @GetMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<Warehouse>> getAllWarehouses() {
         return ResponseEntity.status(200).body(warehouseServiceJpa.getAllWarehouses());
     }
 
 
     @GetMapping("/{warehouseId}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable int warehouseId) {
         Warehouse w = warehouseServiceJpa.getWarehouseById(warehouseId);
         if (w == null) {
@@ -81,6 +85,7 @@ public class WarehouseController {
     }
 
     @PostMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Integer> addWarehouse(@RequestBody Warehouse warehouse) {
         int id = warehouseServiceJpa.addWarehouse(warehouse);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
@@ -88,6 +93,7 @@ public class WarehouseController {
 
 
     @PutMapping("/{warehouseId}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> updateWarehouse(@PathVariable int warehouseId, @RequestBody Warehouse warehouse) {
         warehouse.setWarehouseId(warehouseId);
         warehouseServiceJpa.updateWarehouse(warehouse);
@@ -96,15 +102,26 @@ public class WarehouseController {
 
 
     @DeleteMapping("/{warehouseId}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> deleteWarehouse(@PathVariable int warehouseId) {
         warehouseServiceJpa.deleteWarehouse(warehouseId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/supplier/{supplierId}")
-    public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId) {
-        List<Warehouse> list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
-        return ResponseEntity.ok(list);
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId)  {
+        List<Warehouse> list;
+        try {
+            list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
+            return ResponseEntity.status(200).body(list);
+        } catch (NoWarehouseFoundForSupplierException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+            return ResponseEntity.status(404).build();
+        }
+        // return ResponseEntity.noContent().build();
+        // return ResponseEntity.ok(list);
     }
 
     @ExceptionHandler(RuntimeException.class)

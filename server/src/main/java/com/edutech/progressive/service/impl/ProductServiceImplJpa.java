@@ -3,6 +3,8 @@ package com.edutech.progressive.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.entity.Product;
@@ -20,6 +22,7 @@ public class ProductServiceImplJpa   implements ProductService{
     }
 
     @Override
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public List<Product> getAllProducts() {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
@@ -27,6 +30,8 @@ public class ProductServiceImplJpa   implements ProductService{
     }
 
     @Override
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public Product getProductById(int productId) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'getProductById'");
@@ -34,6 +39,8 @@ public class ProductServiceImplJpa   implements ProductService{
     }
 
     @Override
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public int addProduct(Product product) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'addProduct'");
@@ -42,6 +49,8 @@ public class ProductServiceImplJpa   implements ProductService{
     }
 
     @Override
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public void updateProduct(Product product) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
@@ -56,12 +65,16 @@ public class ProductServiceImplJpa   implements ProductService{
     }
 
     @Override
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public void deleteProduct(int productId) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'deleteProduct'");
         productRepo.deleteById(productId);
     }
     
+    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public  List<Product> getAllProductByWarehouse(int warehouseId) {
         // return null;
         return productRepo.findAllByWarehouse_WarehouseId(warehouseId);

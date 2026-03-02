@@ -1,6 +1,7 @@
 package com.edutech.progressive.service;
 
 import com.edutech.progressive.entity.Warehouse;
+import com.edutech.progressive.exception.NoWarehouseFoundForSupplierException;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface WarehouseService {
     }
 
     //Do not implement these methods in WarehouseServiceImplArraylist.java and WarehouseServiceImplJdbc.java class
-    default List<Warehouse> getWarehouseBySupplier(int supplierId) {
+    default List<Warehouse> getWarehouseBySupplier(int supplierId) throws NoWarehouseFoundForSupplierException {
         return null;
     }
 }

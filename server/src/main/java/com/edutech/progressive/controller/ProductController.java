@@ -5,6 +5,7 @@ import com.edutech.progressive.service.impl.ProductServiceImplJpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/product")
+
 public class ProductController {
 
     private final ProductServiceImplJpa productServiceImplJpa;
@@ -38,11 +40,13 @@ public class ProductController {
     }
 
     @PostMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Integer> addProduct(@RequestBody Product product) {
         return ResponseEntity.status(201).body(productServiceImplJpa.addProduct(product));
     }
 
    @PutMapping("/{productId}")
+   @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> updateProduct(@PathVariable int productId, @RequestBody Product product) {
         Product p  = productServiceImplJpa.getProductById(productId);
         productServiceImplJpa.updateProduct(p);
@@ -50,6 +54,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> deleteProduct(@PathVariable int productId) {
         // Product  p = productServiceImplJpa.getProductById(productId);
 
@@ -59,6 +64,7 @@ public class ProductController {
     }
 
     @GetMapping("/warehouse/{warehouseId}")
+    
     public ResponseEntity<List<Product>> getAllProductByWarehouse(@PathVariable int warehouseId) {
         return ResponseEntity.status(200).body(productServiceImplJpa.getAllProductByWarehouse(warehouseId));
     }

@@ -4,6 +4,10 @@ import com.edutech.progressive.entity.Shipment;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+
+
 public interface ShipmentService {
     List<Shipment> getAllShipments();
 
@@ -11,8 +15,10 @@ public interface ShipmentService {
 
     int addShipment(Shipment shipment);
 
-    void updateShipment(Shipment shipment);
+     void updateShipment(Shipment shipment);
 
     void deleteShipment(int shipmentId);
+
+    // void updateShipment(int shipId, Shipment shipment);
 
 }
