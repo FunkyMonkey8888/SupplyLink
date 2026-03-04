@@ -6,20 +6,18 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.edutech.progressive.entity.*;
 import com.edutech.progressive.exception.NoWarehouseFoundForSupplierException;
 import com.edutech.progressive.repository.ProductRepository;
 import com.edutech.progressive.repository.SupplierRepository;
+// import com.edutech.progressive.repository.SupplierRepository;
 import com.edutech.progressive.repository.WarehouseRepository;
 import com.edutech.progressive.service.WarehouseService;
 
 
 @Service("warehouseServiceJpa")
+@SuppressWarnings("null")
 public class WarehouseServiceImplJpa implements WarehouseService  {
 
 
@@ -29,8 +27,10 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
     
     
     @Autowired
-    public WarehouseServiceImplJpa(WarehouseRepository warehouseRepository) {
+    public WarehouseServiceImplJpa(WarehouseRepository warehouseRepository, ProductRepository productRepository, SupplierRepository repo) {
         this.warehouseRepository = warehouseRepository;
+        this.productRepository= productRepository;
+        this.supplierRepository = repo;
     }
 
 

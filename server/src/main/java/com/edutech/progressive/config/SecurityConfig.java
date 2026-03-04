@@ -1,103 +1,107 @@
-package com.edutech.progressive.config;
+// // package com.edutech.progressive.config;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.ProviderManager;
-// import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-// import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-// import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+// // import org.springframework.context.annotation.Bean;
+// // import org.springframework.context.annotation.Configuration;
+// // import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+// // import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+// // import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+// // import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+// // import org.springframework.security.web.SecurityFilterChain;
+// // import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.edutech.progressive.jwt.JwtRequestFilter;
+// // // import com.edutech.progressive.jwt.JwtRequestFilter;
 
-
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest().permitAll() // Allow all requests without authentication
-                .and()
-                .csrf().disable(); // Disable CSRF protection if it's not needed
-    }
-}
-
-
-// // // @EnableMethodSecurity
-// // public class SecurityConfig {
-
-// //     private final JwtRequestFilter jwtRequestFilter;
-
-// //     @Autowired
-// //     public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
-// //         this.jwtRequestFilter = jwtRequestFilter;
-// //     }
+// // @SuppressWarnings("deprecation")
+// // @Configuration
+// // @EnableWebSecurity
+// // @EnableMethodSecurity(securedEnabled = true)
+// // public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 // //     @Bean
-// //     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+// //     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 // //         http
-// //             .csrf(csrf -> csrf.disable())               // stateless APIs: disable CSRF
+// //             .csrf(csrf -> csrf.disable()) 
 // //             .authorizeHttpRequests(auth -> auth
-// //                 // .requestMatchers("/auth/**", "/public/**").permitAll()
-// //                 .anyRequest().authenticated()
-// //             )
-// //             .httpBasic(Customizer.withDefaults());      // optional; can be removed
 
-// //         // Register the JWT filter before the username/password filter
-// //         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+// //                 // .antMatchers("/supplier/**", "/warehouse/**").permitAll()
+
+// //                 // keep auth for the rest
+// //                 .anyRequest().authenticated()
+// //             );
+
+// //         // http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 // //         return http.build();
-// //     }
-
-// //     // Typical beans (if you authenticate via username/password anywhere)
-// //     @Bean
-// //     public PasswordEncoder passwordEncoder() {
-// //         return new BCryptPasswordEncoder();
-// //     }
-
-// //     // If you need AuthenticationManager for a login endpoint:
-// //     @Bean
-// //     public AuthenticationManager authenticationManager(UserDetailsService uds, PasswordEncoder encoder) {
-// //         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-// //         provider.setUserDetailsService(uds);
-// //         provider.setPasswordEncoder(encoder);
-// //         return new ProviderManager(provider);
 // //     }
 // // }
 
 
-// @Configuration
-// @EnableWebSecurity
-// @EnableMethodSecurity(securedEnabled = true) // or prePostEnabled if using @PreAuthorize
-// public class SecurityConfig {
+package com.edutech.progressive.config;
 
-//     @Bean
-//     SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter jwtRequestFilter) throws Exception {
-//         http
-//             .csrf(csrf -> csrf.disable()) 
-//             .authorizeHttpRequests(auth -> auth
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-//                 .antMatchers("/supplier/**", "/warehouse/**").permitAll()
+import com.edutech.progressive.jwt.JwtRequestFilter;
+import com.edutech.progressive.service.LoginService;
 
-//                 // keep auth for the rest
-//                 .anyRequest().authenticated()
-//             );
 
-//         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//         return http.build();
-//     }
-// }
+    @Autowired private JwtRequestFilter jwtRequestFilter;
+    @Autowired private LoginService userService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() { return PasswordEncoderFactories.createDelegatingPasswordEncoder(); }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder());
+        auth.authenticationProvider(provider);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+           .and()
+           .authorizeRequests()
+             .antMatchers("/user/register", "/user/login", "/h2-console/**").permitAll()
+             .antMatchers(HttpMethod.GET, "/product/**").authenticated()
+             .antMatchers("/supplier/**").authenticated()
+             .antMatchers("/warehouse/**").authenticated()
+             .anyRequest().authenticated()
+           .and()
+           .headers().frameOptions().disable();
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+}
+

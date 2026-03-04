@@ -40,13 +40,13 @@ public class ProductController {
     }
 
     @PostMapping
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Integer> addProduct(@RequestBody Product product) {
         return ResponseEntity.status(201).body(productServiceImplJpa.addProduct(product));
     }
 
    @PutMapping("/{productId}")
-   @Secured({"ROLE_USER", "ROLE_ADMIN"})
+//    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> updateProduct(@PathVariable int productId, @RequestBody Product product) {
         Product p  = productServiceImplJpa.getProductById(productId);
         productServiceImplJpa.updateProduct(p);
@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    // @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Void> deleteProduct(@PathVariable int productId) {
         // Product  p = productServiceImplJpa.getProductById(productId);
 

@@ -1,16 +1,13 @@
 package com.edutech.progressive.service.impl;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.edutech.progressive.config.SecurityConfig;
 // import com.edutech.progressive.config.SecurityConfig;
 import com.edutech.progressive.entity.Supplier;
 import com.edutech.progressive.exception.SupplierAlreadyExistsException;
@@ -22,10 +19,12 @@ import com.edutech.progressive.service.SupplierService;
 public class SupplierServiceImplJpa implements SupplierService  {
 
     private SupplierRepository supplierRepo;
+    private PasswordEncoder encoder;
     
 
     @Autowired
-    public SupplierServiceImplJpa(SupplierRepository supplierRepo) {
+    public SupplierServiceImplJpa(SupplierRepository supplierRepo, PasswordEncoder pe) {
+        this.encoder = pe;
         this.supplierRepo = supplierRepo;
     }
 
@@ -34,37 +33,10 @@ public class SupplierServiceImplJpa implements SupplierService  {
 
 
     
-    
-    // @Autowired
-    // public SupplierServiceImplJpa() {
-    // }
 
-
-
-
-
-    // public SupplierServiceImplJpa() {
-    // }
-
-
-
-
-    //  @Override
-    // @Secured({ "ROLE_ADMIN"})
-            
-    // public int addSupplier(Supplier supplier) throws SupplierAlreadyExistsException {
-    //     // TODO Auto-generated method stub
-    //     // throw new UnsupportedOperationException("Unimplemented method 'addSupplier'");
-    //     Supplier existingSupplier = supplierRepo.findById(supplier.getSupplierId()).orElse(null);
-    //     if( existingSupplier != null) throw new SupplierAlreadyExistsException("Supplier already exists");
-    //     // boolean nameExists = existingSupplier.getSupplierName().equalsIgnoreCase(supplier.getSupplierName()) || existingSupplier.getEmail().equalsIgnoreCase(supplier.getEmail()) || existingSupplier.getUsername().equalsIgnoreCase(supplier.getUsername());
-    //     boolean exists = supplierRepo.existsByEmailIgnoreCase(supplier.getEmail()) || supplierRepo.existsByUsernameIgnoreCase(supplier.getUsername());
-    //     if(exists) throw new SupplierAlreadyExistsException("Supplier Already vExisits");
-    //     Supplier s = supplierRepo.save(supplier);
-    //     return s !=null ? s.getSupplierId(): -1;
-    // }
     
     @Override
+    @Secured({"ROLE_ADMIN"})
     public int addSupplier(Supplier supplier) throws SupplierAlreadyExistsException {
         // If client sends an id that already exists, treat as duplicate
         if (supplier.getSupplierId() != 0 &&
@@ -74,9 +46,9 @@ public class SupplierServiceImplJpa implements SupplierService  {
 
         // Enforce uniqueness on email / username
         boolean dup = supplierRepo.existsByEmailIgnoreCase(supplier.getEmail())
-                   || supplierRepo.existsByUsernameIgnoreCase(supplier.getUsername());
+                   || supplierRepo.existsByUsername(supplier.getUsername());
         if (dup) throw new SupplierAlreadyExistsException("Supplier already exists");
-
+        supplier.setPassword(encoder.encode(supplier.getPassword()));
         Supplier saved = supplierRepo.save(supplier);
         return saved != null ? saved.getSupplierId() : -1;
     }
@@ -93,25 +65,7 @@ public class SupplierServiceImplJpa implements SupplierService  {
         return supplierRepo.findAll();
     }
 
-// @Override
-// public int addSupplier(Supplier supplier) {
-//     if (supplier == null) {
-//         throw new IllegalArgumentException("Supplier must not be null");
-//     }
 
-//     boolean dup =
-//         supplierRepo.existsBySupplierNameIgnoreCase(supplier.getSupplierName()) ||
-//         supplierRepo.existsByEmailIgnoreCase(supplier.getEmail()) ||
-//         supplierRepo.existsByUsernameIgnoreCase(supplier.getUsername());
-
-//     if (dup) {
-//         // Make SupplierAlreadyExistsException extend RuntimeException to avoid compile issues in tests
-//         throw new SupplierAlreadyExistsException("Supplier already exists");
-//     }
-
-//     Supplier saved = supplierRepo.save(supplier);
-//     return saved != null ? saved.getSupplierId() : -1;
-// }
 
     
 
@@ -126,34 +80,6 @@ public class SupplierServiceImplJpa implements SupplierService  {
         return list;
     }
 
-        // @Secured({ "ROLE_ADMIN"})
-                
-    // public void updateSupplier(int id, Supplier s) throws SupplierAlreadyExistsException, SupplierDoesNotExistException{
-        
-    //     Supplier oldSupplier = supplierRepo.findById(id).orElse(null);
-    //     // Supplier existingSupplier = supplierRepo.findById(s.getSupplierId()).orElse(null);
-    //     if( oldSupplier == null ) throw new SupplierDoesNotExistException("null");
-    //     // boolean nameExists = existingSupplier.getSupplierName().equalsIgnoreCase(s.getSupplierName()) || existingSupplier.getEmail().equalsIgnoreCase(s.getEmail()) || existingSupplier.getUsername().equalsIgnoreCase(s.getUsername());
-    //     // if(nameExists) throw new SupplierAlreadyExistsException("Supplier Already vExisits");
-    //     // if(oldSupplier.getSupplierName().equalsIgnoreCase(s.getSupplierName()) || oldSupplier.getEmail().equalsIgnoreCase(s.getEmail()))  throw new SupplierAlreadyExistsException("Supplier already exists");
-    //     List<Supplier> suppliers = supplierRepo.findAll();
-    //     for (Supplier existingSupplier : suppliers) {
-    //     // if( existingSupplier != null) throw new SupplierAlreadyExistsException("Supplier already exists");
-    //     boolean nameExists = existingSupplier.getSupplierName().equalsIgnoreCase(s.getSupplierName()) || existingSupplier.getEmail().equalsIgnoreCase(s.getEmail()) || existingSupplier.getUsername().equalsIgnoreCase(s.getUsername());
-    //     if(nameExists) throw new SupplierAlreadyExistsException("Supplier Already vExisits");
-            
-    //     }
-    //     oldSupplier.setAddress(s.getAddress());
-    //     oldSupplier.setEmail(s.getEmail());
-    //     oldSupplier.setPassword(s.getPassword());
-    //     oldSupplier.setUsername(s.getUsername());
-    //     oldSupplier.setPhone(s.getPhone());
-    //     oldSupplier.setRole(s.getRole());
-    //     oldSupplier.setSupplierName(s.getSupplierName());
-    //     supplierRepo.save(oldSupplier);
-
-    // }
-
     
 public void updateSupplier(int id, Supplier s)
             throws SupplierAlreadyExistsException, SupplierDoesNotExistException {
@@ -161,7 +87,7 @@ public void updateSupplier(int id, Supplier s)
         Supplier old = supplierRepo.findById(id)
                 .orElseThrow(() -> new SupplierDoesNotExistException("Supplier not found: " + id));
 
-        // Conflict only if ANOTHER supplier (different id) has same email/username
+
         boolean dupEmail = supplierRepo.existsByEmailIgnoreCaseAndSupplierIdNot(s.getEmail(), id);
         boolean dupUser  = supplierRepo.existsByUsernameIgnoreCaseAndSupplierIdNot(s.getUsername(), id);
         if (dupEmail || dupUser) {
@@ -178,35 +104,7 @@ public void updateSupplier(int id, Supplier s)
         supplierRepo.save(old);
     }
 
-    
-//     public void updateSupplier(int id, Supplier s) {
-//     Supplier old = supplierRepo.findById(id)
-//         .orElseThrow(() -> new SupplierDoesNotExistException("Supplier not found: " + id));
 
-//     boolean dupName = !old.getSupplierName().equalsIgnoreCase(s.getSupplierName()) &&
-//                       supplierRepo.existsBySupplierNameIgnoreCase(s.getSupplierName());
-//     boolean dupEmail = !old.getEmail().equalsIgnoreCase(s.getEmail()) &&
-//                        supplierRepo.existsByEmailIgnoreCase(s.getEmail());
-//     boolean dupUser = !old.getUsername().equalsIgnoreCase(s.getUsername()) &&
-//                       supplierRepo.existsByUsernameIgnoreCase(s.getUsername());
-
-//     if ( dupEmail || dupUser || dupName) {
-//         throw new SupplierAlreadyExistsException("Supplier already exists");
-//     }
-
-//     old.setAddress(s.getAddress());
-//     old.setEmail(s.getEmail());
-//     old.setPassword(s.getPassword());
-//     old.setUsername(s.getUsername());
-//     old.setPhone(s.getPhone());
-//     old.setRole(s.getRole());
-//     old.setSupplierName(s.getSupplierName());
-//     supplierRepo.save(old);
-// }
-
-    // @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    // @Secured({ "ROLE_ADMIN"})
-            
     public void deleteSupplier(int id) throws SupplierDoesNotExistException{
         Supplier s = supplierRepo.findById(id).orElseThrow();
         if(s==null) throw new SupplierDoesNotExistException("Supplier does not exists");
@@ -223,3 +121,115 @@ public void updateSupplier(int id, Supplier s)
 
 
 }
+
+// package com.edutech.progressive.service.impl;
+
+// import java.util.List;
+
+// import org.springframework.data.domain.Sort;
+// import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.stereotype.Service;
+// import org.springframework.transaction.annotation.Transactional;
+
+// import com.edutech.progressive.entity.Supplier;
+// import com.edutech.progressive.exception.SupplierDoesNotExistException;
+// import com.edutech.progressive.repository.SupplierRepository;
+// import com.edutech.progressive.service.SupplierService;
+
+// @Service
+// public class SupplierServiceImplJpa implements SupplierService {
+
+//     private final SupplierRepository repo;
+//     private final PasswordEncoder encoder;
+
+//     public SupplierServiceImplJpa(SupplierRepository repo, PasswordEncoder encoder) {
+//         this.repo = repo;
+//         this.encoder = encoder;
+//     }
+
+//     @Override
+//     public List<Supplier> getAllSuppliers() {
+//         return repo.findAll();
+//     }
+
+//     @Override
+//     public List<Supplier> getAllSuppliersSortedByName() {
+//         return repo.findAll(Sort.by(Sort.Direction.ASC, "supplierName"));
+//     }
+
+//     @Override
+//     public Supplier getSupplierById(int supplierId) {
+//         return repo.findById(supplierId)
+//                    .orElseThrow(() -> new SupplierDoesNotExistException("Supplier id " + supplierId + " not found"));
+//     }
+
+//     @Override
+//     @Transactional
+//     public int addSupplier(Supplier s) {
+//         // normalizeAndValidateRole(s);
+
+//         // uniqueness
+//         if (repo.existsByUsername(s.getUsername()))
+//             throw new com.edutech.progressive.exception.SupplierAlreadyExistsException("Username already taken");
+//         if (repo.existsByEmailIgnoreCase(s.getEmail()))
+//             throw new com.edutech.progressive.exception.SupplierAlreadyExistsException("Email already registered");
+
+//         // encode password
+//         s.setPassword(encoder.encode(s.getPassword()));
+
+//         Supplier saved = repo.save(s);
+//         return saved.getSupplierId();
+//     }
+
+//     // @Override
+//     @Transactional
+//     public void updateSupplier( int supplierId, Supplier incoming)  {
+//         Supplier current = getSupplierById(incoming.getSupplierId());
+
+//         // username changed?
+//         if (incoming.getUsername() != null && !incoming.getUsername().equals(current.getUsername())) {
+//             if (repo.existsByUsername(incoming.getUsername()))
+//                 throw new com.edutech.progressive.exception.SupplierAlreadyExistsException("Username already taken");
+//             current.setUsername(incoming.getUsername());
+//         }
+
+//         // email changed?
+//         if (incoming.getEmail() != null && !incoming.getEmail().equals(current.getEmail())) {
+//             if (repo.existsByEmailIgnoreCase(incoming.getEmail()))
+//                 throw new com.edutech.progressive.exception.SupplierAlreadyExistsException("Email already registered");
+//             current.setEmail(incoming.getEmail());
+//         }
+
+//         if (incoming.getSupplierName() != null) current.setSupplierName(incoming.getSupplierName());
+//         if (incoming.getPhone() != null) current.setPhone(incoming.getPhone());
+//         if (incoming.getAddress() != null) current.setAddress(incoming.getAddress());
+
+
+//         if (incoming.getRole() != null) {
+//             current.setRole(incoming.getRole()); // will throw if invalid
+//         }
+
+//         // password – only if provided and different from existing
+//         if (incoming.getPassword() != null && !incoming.getPassword().isBlank()) {
+//             boolean same = encoder.matches(incoming.getPassword(), current.getPassword());
+//             if (!same) {
+//                 current.setPassword(encoder.encode(incoming.getPassword()));
+//             }
+//         }
+
+//         repo.save(current);
+//     }
+
+//     @Override
+//     @Transactional
+//     public void deleteSupplier(int supplierId) {
+//         // If you have dependent tables (products/addresses), delete them here first (cascade or explicit)
+//         if (!repo.existsById(supplierId))
+//             throw new SupplierDoesNotExistException("Supplier id " + supplierId + " not found");
+//         repo.deleteBySupplierId(supplierId);
+//     }
+
+//     // ---------- helpers ----------
+
+
+// }

@@ -1,5 +1,7 @@
 package com.edutech.progressive.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,12 +18,16 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
 
     boolean existsByEmailIgnoreCase(@Param("email") String email);
 
-    boolean existsByUsernameIgnoreCase(@Param("username") String username);
+    boolean existsByUsername(@Param("username") String username);
 
     boolean existsBySupplierNameIgnoreCase(@Param("supplier_name") String supplierName);
 
     boolean existsByEmailIgnoreCaseAndSupplierIdNot(String email, int id);
 
     boolean existsByUsernameIgnoreCaseAndSupplierIdNot(String username, int id);
+
+    Optional<Supplier> findByUsername(String username);
+
+    // Optional<Supplier> findByUserId(Integer userId);
 
 }

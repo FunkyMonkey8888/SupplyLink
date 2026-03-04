@@ -28,9 +28,9 @@ public class Warehouse implements Comparable<Warehouse>{
     @Column(name = "warehouse_id")
     private int warehouseId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id")
-    @JsonIgnore
+    // @JsonIgnore
     private Supplier supplier;
 
     @Column(name = "capacity")

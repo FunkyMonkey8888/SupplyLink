@@ -2,6 +2,7 @@ package com.edutech.progressive.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,9 +24,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     
     @Modifying
     @Transactional
+        @EntityGraph(attributePaths = "warehouse")
     void deleteByWarehouse_WarehouseId(@Param("warehouseId")int warehouseId);
 
     @Modifying
     @Transactional
+        @EntityGraph(attributePaths = "supplier")
     void deleteByWarehouse_Supplier_SupplierId(@Param("supplierId") int supplierId);
 }

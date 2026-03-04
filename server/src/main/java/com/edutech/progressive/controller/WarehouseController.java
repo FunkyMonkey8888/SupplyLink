@@ -7,6 +7,7 @@ import com.edutech.progressive.service.impl.WarehouseServiceImplJpa;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +69,13 @@ public class WarehouseController {
 
 
     @GetMapping
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<Warehouse>> getAllWarehouses() {
         return ResponseEntity.status(200).body(warehouseServiceJpa.getAllWarehouses());
     }
 
 
     @GetMapping("/{warehouseId}")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+        @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable int warehouseId) {
         Warehouse w = warehouseServiceJpa.getWarehouseById(warehouseId);
         if (w == null) {
@@ -85,15 +85,17 @@ public class WarehouseController {
     }
 
     @PostMapping
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    // @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<Integer> addWarehouse(@RequestBody Warehouse warehouse) {
+        // if(warehouse.getSupplier()== null) return ResponseEntity.status(404).build();
         int id = warehouseServiceJpa.addWarehouse(warehouse);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
 
     @PutMapping("/{warehouseId}")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> updateWarehouse(@PathVariable int warehouseId, @RequestBody Warehouse warehouse) {
         warehouse.setWarehouseId(warehouseId);
         warehouseServiceJpa.updateWarehouse(warehouse);
@@ -102,14 +104,16 @@ public class WarehouseController {
 
 
     @DeleteMapping("/{warehouseId}")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+   
+    // @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable int warehouseId) {
         warehouseServiceJpa.deleteWarehouse(warehouseId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/supplier/{supplierId}")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+
     public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId)  {
         List<Warehouse> list;
         try {
@@ -124,8 +128,8 @@ public class WarehouseController {
         // return ResponseEntity.ok(list);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleException(RuntimeException e){
-        return ResponseEntity.status(500).body(e.toString());
-    }
+    // @ExceptionHandler(RuntimeException.class)
+    // public ResponseEntity<String> handleException(RuntimeException e){
+    //     return ResponseEntity.status(500).body(e.toString());
+    // }
 }

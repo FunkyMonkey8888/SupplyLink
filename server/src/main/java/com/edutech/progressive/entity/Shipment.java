@@ -41,9 +41,9 @@ public class Shipment {
     public String destinationLocation;
     private String status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    // @JsonIgnore
+    @JsonIgnore
     private Product product;
     public Shipment() {
     }

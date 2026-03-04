@@ -86,7 +86,6 @@ public class SupplierController {
 
 
     @GetMapping
-    
     public ResponseEntity<List<Supplier>> getAllSuppliers() {
         List<Supplier> list = supplierServiceJpa.getAllSuppliers();
         return ResponseEntity.ok(list);
@@ -94,29 +93,28 @@ public class SupplierController {
 
 
     @GetMapping("/{supplierId}")
-@Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Supplier> getSupplierById(@PathVariable int supplierId) throws SupplierDoesNotExistException {
         Supplier supplier = supplierServiceJpa.getSupplierById(supplierId);
-        // if (supplier == null) {
-        //     throw new SupplierDoesNotExistException("Supplier does not exists");
-        // }
+
         return ResponseEntity.ok(supplier);
     }
 
 
     @PostMapping
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    // @Secured({ "ROLE_ADMIN"})
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Integer> addSupplier(@RequestBody Supplier supplier) {
-        // int id;
-        // try {
-        //     id = supplierServiceJpa.addSupplier(supplier);
-        //     ResponseEntity.status(201).body(id);
-        // } catch (SupplierAlreadyExistsException e) {
-        //     // TODO Auto-generated catch block
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        //     // e.printStackTrace();
-        // }
-        return ResponseEntity.status(201).body(supplierServiceJpa.addSupplier(supplier));
+        int id;
+        try {
+            id = supplierServiceJpa.addSupplier(supplier);
+            ResponseEntity.status(201).body(id);
+        } catch (SupplierAlreadyExistsException e) {
+            // TODO Auto-generated catch block
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            // e.printStackTrace();
+        }
+        // return ResponseEntity.status(201).body(supplierServiceJpa.addSupplier(supplier));
+        return ResponseEntity.status(201).build();
     }
 
 
@@ -124,11 +122,13 @@ public class SupplierController {
 
     
     @PutMapping("/{supplierId}")
-@Secured({"ROLE_USER", "ROLE_ADMIN"})
+// @Secured({ "ROLE_ADMIN"})
+        // @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> updateSupplier(@PathVariable int supplierId,
                                                @RequestBody Supplier supplier) {
         try {
-            // If not found, your service should throw SupplierDoesNotExistException
+
             supplierServiceJpa.updateSupplier(supplierId, supplier);
             return ResponseEntity.ok().build();
         } catch (SupplierDoesNotExistException e) {
@@ -142,7 +142,9 @@ public class SupplierController {
 
     
     @DeleteMapping("/{supplierId}")
-@Secured({"ROLE_USER", "ROLE_ADMIN"})
+// @Secured({ "ROLE_ADMIN"})
+    // @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteSupplier(@PathVariable int supplierId) throws SupplierDoesNotExistException {
         if(supplierServiceJpa.getSupplierById(supplierId)== null) return ResponseEntity.status(404).build();
         supplierServiceJpa.deleteSupplier(supplierId);
@@ -170,10 +172,7 @@ public class SupplierController {
         return ResponseEntity.ok(list);
     }
 
-    // @ExceptionHandler(RuntimeException.class)
-    // public ResponseEntity<String> handleException(RuntimeException e){
-    //     return ResponseEntity.status(500).body(e.toString());
-    // }
+
 
     @GetMapping("/warehouse")
     
@@ -182,33 +181,15 @@ public class SupplierController {
     }
 
     @GetMapping("/{supplierId}/warehouse")
-    
     public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId) throws NoWarehouseFoundForSupplierException {
         List<Warehouse> list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
         return ResponseEntity.status(200).body(list);
     }
 
-//     @GetMapping("/{supplierId}/warehouse")
-// public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(
-//         @PathVariable int supplierId) throws NoWarehouseFoundForSupplierException {
+    // @ExceptionHandler(RuntimeException.class)
+    // public ResponseEntity<?> handleEx(RuntimeException e){
+    //     return ResponseEntity.status(500).body(e.getMessage());
+    // }
 
-//     List<Warehouse> list = warehouseServiceJpa.getWarehouseBySupplier(supplierId);
-
-//     if(list == null || list.isEmpty()) {
-//         throw new NoWarehouseFoundForSupplierException("No warehouse found for supplier " + supplierId);
-//     }
-
-//     return ResponseEntity.ok(list);
-// }
-
-// @ExceptionHandler(RuntimeException.class)
-// public ResponseEntity<?> handleEx(RuntimeException e){
-//     return ResponseEntity.status(500).body(null);
-// }
-
-// @ExceptionHandler(SupplierAlreadyExistsException.class)
-// public ResponseEntity<?> handleSupplierExists(SupplierAlreadyExistsException e) {
-//             return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//         }
 
 }

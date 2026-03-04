@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.edutech.progressive.entity.Product;
+// import com.edutech.progressive.entity.Product;
 import com.edutech.progressive.entity.Shipment;
-import com.edutech.progressive.entity.Warehouse;
+// import com.edutech.progressive.entity.Warehouse;
 import com.edutech.progressive.repository.ShipmentRepository;
 import com.edutech.progressive.service.ShipmentService;
 

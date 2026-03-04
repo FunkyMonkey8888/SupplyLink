@@ -31,6 +31,11 @@ public class LoginResponse {
    }
    public LoginResponse() {
    }
+   public LoginResponse(String token) {
+      this.token = token;
+   }
+
+   
 
    
 }
