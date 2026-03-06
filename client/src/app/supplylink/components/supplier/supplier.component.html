@@ -1,0 +1,62 @@
+<!-- src/app/supplylink/components/Supplier.Component.html -->
+<section class="card">
+  <h2>Create Supplier</h2>
+
+  <!-- Async banners -->
+  <div class="alert error" *ngIf="(supplierError$ | async) as err">
+    {{ err }}
+  </div>
+  <div class="alert success" *ngIf="(supplierSuccess$ | async) as ok">
+    {{ ok }}
+  </div>
+
+  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="form-grid" novalidate>
+    <!-- Name -->
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" type="text" formControlName="name" />
+      <div class="error" *ngIf="name?.touched && name?.invalid">
+        <span *ngIf="name?.errors?.['required']">Name is required.</span>
+        <span *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters.</span>
+        <span *ngIf="name?.errors?.['maxlength']">Name cannot exceed 60 characters.</span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+      <div class="error" *ngIf="email?.touched && email?.invalid">
+        <span *ngIf="email?.errors?.['required']">Email is required.</span>
+        <span *ngIf="email?.errors?.['email']">Please enter a valid email.</span>
+        <span *ngIf="email?.errors?.['maxlength']">Email cannot exceed 100 characters.</span>
+      </div>
+    </div>
+
+    <!-- Username -->
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Letters, numbers, underscores only" />
+      <div class="error" *ngIf="username?.touched && username?.invalid">
+        <span *ngIf="username?.errors?.['required']">Username is required.</span>
+        <span *ngIf="username?.errors?.['pattern']">Only letters, numbers, and underscores are allowed.</span>
+        <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters.</span>
+        <span *ngIf="username?.errors?.['maxlength']">Username cannot exceed 20 characters.</span>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="At least 8 characters" />
+      <div class="error" *ngIf="password?.touched && password?.invalid">
+        <span *ngIf="password?.errors?.['required']">Password is required.</span>
+        <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters.</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn primary" [disabled] = supplierForm?.pending>Save Supplier</button>
+    </div>
+  </form>
+</section>
