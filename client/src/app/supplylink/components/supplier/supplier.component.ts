@@ -120,15 +120,15 @@ import { Supplier } from '../../types/Supplier';
 
 @Component({
   selector: 'app-supplier',
-  // NOTE: keep as non-standalone since your tests use `declarations: [SupplierComponent]`
+
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
 })
 export class SupplierComponent implements OnInit {
-  // Name the form EXACTLY as in the template/spec:
+
   supplierForm!: FormGroup;
 
-  // Optional predefined Supplier (not used to prefill required fields now)
+
   supplier: Supplier = new Supplier(
     1, 'John Wane', 'johnwane@gmail.com', '+91-99999-11111',
     'Hyderabad, Telangana', 'johnw', 'Pass@123', 'admin'
