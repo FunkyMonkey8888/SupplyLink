@@ -143,7 +143,7 @@ export class SupplierComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // IMPORTANT: start EMPTY so "touched and empty" makes them invalid
+
     this.supplierForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
@@ -156,14 +156,13 @@ export class SupplierComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
 
-    // Clear feedback on any change
+  
     this.supplierForm.valueChanges.subscribe(() => {
       this.supplierErrorSubject.next(null);
       this.supplierSuccessSubject.next(null);
     });
   }
 
-  // Convenience getters used in template
   get name() { return this.supplierForm.get('name'); }
   get email() { return this.supplierForm.get('email'); }
   get username() { return this.supplierForm.get('username'); }
@@ -181,7 +180,6 @@ export class SupplierComponent implements OnInit {
 
     const { name, email, username, password } = this.supplierForm.value;
 
-    // Update local supplier instance (demonstrates data flow)
     this.supplier.supplierName = name;
     this.supplier.email = email;
     this.supplier.username = username;
