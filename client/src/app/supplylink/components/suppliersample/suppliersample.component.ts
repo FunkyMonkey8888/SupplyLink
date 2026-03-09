@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 @Component({
   selector: 'app-suppliersample',
   standalone: true,
-  imports: [], // Add necessary imports
+  imports: [], 
   templateUrl: './suppliersample.component.html',
   styleUrls: ['./suppliersample.component.css'] 
 })

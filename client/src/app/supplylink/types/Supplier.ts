@@ -33,5 +33,10 @@ export class Supplier {
     console.log(`Supplier ID: ${this.supplierId}`);
     console.log(`Supplier name: ${this.supplierName}`);
     console.log(`email: ${this.email}`);
+    console.log(`phone: ${this.phone}`);
+    console.log(`address: ${this.address}`);
+    console.log(`username: ${this.username}`);
+    console.log(`password: ${this.password}`);
+    console.log(`role: ${this.role}`);
   }
 }

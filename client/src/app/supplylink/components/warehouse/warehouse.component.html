@@ -1,11 +1,69 @@
-<!-- src/app/supplylink/components/WarehouseSample.html -->
-<section class="card">
-  <h2>Warehouse Details</h2>
-  <ul>
-    <li><strong>Warehouse ID:</strong> {{ warehouse.warehouseId }}</li>
-    <li><strong>Supplier ID:</strong> {{ warehouse.supplierId }}</li>
-    <li><strong>Warehouse Name:</strong> {{ warehouse.warehouseName }}</li>
-    <li><strong>Location:</strong> {{ warehouse.location }}</li>
-    <li><strong>Capacity:</strong> {{ warehouse.capacity }}</li>
-  </ul>
-</section>
+<!-- src/app/supplylink/components/warehouse/warehouse.component.html
+<form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="warehouseId">Warehouse ID</label>
+    <input id="warehouseId" type="number" formControlName="warehouseId" />
+  </div>
+
+  <div>
+    <label for="supplierId">Supplier ID</label>
+    <input id="supplierId" type="number" formControlName="supplierId" />
+  </div>
+
+  <div>
+    <label for="warehouseName">Warehouse Name</label>
+    <input id="warehouseName" type="text" formControlName="warehouseName" />
+  </div>
+
+  <div>
+    <label for="location">Location</label>
+    <input id="location" type="text" formControlName="location" />
+  </div>
+
+  <div>
+    <label for="capacity">Capacity</label>
+    <input id="capacity" type="number" formControlName="capacity" />
+  </div>
+
+  <button type="submit">Submit</button>
+</form> -->
+
+<!-- src/app/supplylink/components/warehouse/warehouse.component.html -->
+<form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="supplierId">Supplier ID</label>
+    <input id="supplierId" type="number" formControlName="supplierId" />
+    <div *ngIf="submitted && f['supplierId'].invalid">
+      <small *ngIf="f['supplierId'].errors?.['required']">Supplier ID is required.</small>
+      <small *ngIf="f['supplierId'].errors?.['min']">Supplier ID must be greater than 0.</small>
+    </div>
+  </div>
+
+  <div>
+    <label for="warehouseName">Warehouse Name</label>
+    <input id="warehouseName" type="text" formControlName="warehouseName" />
+    <div *ngIf="submitted && f['warehouseName'].invalid">
+      <small *ngIf="f['warehouseName'].errors?.['required']">Warehouse name is required.</small>
+      <small *ngIf="f['warehouseName'].errors?.['specialChars']">No special characters allowed.</small>
+    </div>
+  </div>
+
+  <div>
+    <label for="location">Location</label>
+    <input id="location" type="text" formControlName="location" />
+  </div>
+
+  <div>
+    <label for="capacity">Capacity</label>
+    <input id="capacity" type="number" formControlName="capacity" />
+    <div *ngIf="submitted && f['capacity'].invalid">
+      <small *ngIf="f['capacity'].errors?.['required']">Capacity is required.</small>
+      <small *ngIf="f['capacity'].errors?.['min']">Capacity cannot be negative.</small>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="warehouseForm.invalid">Submit</button>
+
+  <div *ngIf="serverError"><small>{{ serverError }}</small></div>
+  <div *ngIf="successMessage"><small>{{ successMessage }}</small></div>
+</form>

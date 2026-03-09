@@ -1,62 +1,68 @@
-
-<section class="card">
-  <h2>Create Supplier</h2>
-
-  <!-- Async banners -->
-  <div class="alert error" *ngIf="(supplierError$ | async) as err">
-    {{ err }}
+<!-- src/app/supplylink/components/supplier/supplier.component.html -->
+<form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="supplierName">Supplier Name</label>
+    <input id="supplierName" type="text" formControlName="supplierName" />
+    <div *ngIf="submitted && f['supplierName'].invalid">
+      <small *ngIf="f['supplierName'].errors?.['required']">Supplier name is required.</small>
+      <small *ngIf="f['supplierName'].errors?.['specialChars']">No special characters allowed.</small>
+    </div>
   </div>
-  <div class="alert success" *ngIf="(supplierSuccess$ | async) as ok">
-    {{ ok }}
+
+  <div>
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" />
+    <div *ngIf="submitted && f['email'].invalid">
+      <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
+      <small *ngIf="f['email'].errors?.['email']">Enter a valid email.</small>
+    </div>
   </div>
 
-  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="form-grid" novalidate>
-    <!-- Name -->
-    <div class="field">
-      <label for="name">Name</label>
-      <input id="name" type="text" formControlName="name" />
-      <div class="error" *ngIf="name?.touched && name?.invalid">
-        <span *ngIf="name?.errors?.['required']">Name is required.</span>
-        <span *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters.</span>
-        <span *ngIf="name?.errors?.['maxlength']">Name cannot exceed 60 characters.</span>
-      </div>
+  <div>
+    <label for="phone">Phone</label>
+    <input id="phone" type="text" formControlName="phone" />
+    <div *ngIf="submitted && f['phone'].invalid">
+      <small *ngIf="f['phone'].errors?.['required']">Phone is required.</small>
     </div>
+  </div>
 
-    <!-- Email -->
-    <div class="field">
-      <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
-      <div class="error" *ngIf="email?.touched && email?.invalid">
-        <span *ngIf="email?.errors?.['required']">Email is required.</span>
-        <span *ngIf="email?.errors?.['email']">Please enter a valid email.</span>
-        <span *ngIf="email?.errors?.['maxlength']">Email cannot exceed 100 characters.</span>
-      </div>
+  <div>
+    <label for="address">Address</label>
+    <input id="address" type="text" formControlName="address" />
+    <div *ngIf="submitted && f['address'].invalid">
+      <small *ngIf="f['address'].errors?.['required']">Address is required.</small>
     </div>
+  </div>
 
-    <!-- Username -->
-    <div class="field">
-      <label for="username">Username</label>
-      <input id="username" type="text" formControlName="username" placeholder="Letters, numbers, underscores only" />
-      <div class="error" *ngIf="username?.touched && username?.invalid">
-        <span *ngIf="username?.errors?.['required']">Username is required.</span>
-        <span *ngIf="username?.errors?.['pattern']">Only letters, numbers, and underscores are allowed.</span>
-        <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters.</span>
-        <span *ngIf="username?.errors?.['maxlength']">Username cannot exceed 20 characters.</span>
-      </div>
+  <div>
+    <label for="username">Username</label>
+    <input id="username" type="text" formControlName="username" />
+    <div *ngIf="submitted && f['username'].invalid">
+      <small *ngIf="f['username'].errors?.['required']">Username is required.</small>
+      <small *ngIf="f['username'].errors?.['specialChars']">No special characters allowed.</small>
     </div>
+  </div>
 
-    <!-- Password -->
-    <div class="field">
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" placeholder="At least 8 characters" />
-      <div class="error" *ngIf="password?.touched && password?.invalid">
-        <span *ngIf="password?.errors?.['required']">Password is required.</span>
-        <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters.</span>
-      </div>
+  <div>
+    <label for="password">Password</label>
+    <input id="password" type="password" formControlName="password" />
+    <div *ngIf="submitted && f['password'].invalid">
+      <small *ngIf="f['password'].errors?.['required']">Password is required.</small>
+      <small *ngIf="f['password'].errors?.['minlength']">Minimum 8 characters.</small>
+      <small *ngIf="f['password'].errors?.['policy']">Must contain at least one capital letter and one number.</small>
     </div>
+  </div>
 
-    <div class="actions">
-      <button type="submit" class="btn primary" [disabled] = supplierForm?.pending>Save Supplier</button>
+  <div>
+    <label for="role">Role</label>
+    <input id="role" type="text" formControlName="role" />
+    <div *ngIf="submitted && f['role'].invalid">
+      <small *ngIf="f['role'].errors?.['required']">Role is required.</small>
     </div>
-  </form>
-</section>
+  </div>
+
+  <button type="submit" [disabled]="supplierForm.invalid">Submit</button>
+
+  <div *ngIf="serverError"><small>{{ serverError }}</small></div>
+  <div *ngIf="successMessage"><small>{{ successMessage }}</small></div>
+</form>
