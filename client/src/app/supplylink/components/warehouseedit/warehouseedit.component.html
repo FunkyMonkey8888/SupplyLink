@@ -1,0 +1,11 @@
+<!-- src/app/supply/components/warehouseedit/warehouseedit.component.html -->
+<h3>Edit Warehouse</h3>
+<form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" style="display:grid;gap:.5rem;max-width:420px;">
+  <label>Name</label>
+  <input type="text" formControlName="warehouseName" />
+  <label>Location</label>
+  <input type="text" formControlName="location" />
+  <label>Capacity</label>
+  <input type="text" formControlName="capacity" />
+  <button type="submit" [disabled]="warehouseForm.invalid">Save</button>
+</form>

@@ -1,38 +1,34 @@
 <!-- src/app/supplylink/components/product/product.component.html -->
 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div>
-    <label for="productId">Product ID</label>
-    <input id="productId" type="number" formControlName="productId" />
+    <label>Warehouse</label>
+    <select formControlName="warehouse">
+      <option [ngValue]="null">-- select --</option>
+      <option *ngFor="let w of (warehouses | async)" [ngValue]="w">
+        {{ w?.warehouseName }}
+      </option>
+    </select>
   </div>
 
   <div>
-    <label for="warehouseId">Warehouse ID</label>
-    <input id="warehouseId" type="number" formControlName="warehouseId" />
+    <label>Product Name</label>
+    <input type="text" formControlName="productName" />
   </div>
 
   <div>
-    <label for="productName">Product Name</label>
-    <input id="productName" type="text" formControlName="productName" />
+    <label>Product Description</label>
+    <input type="text" formControlName="productDescription" />
   </div>
 
   <div>
-    <label for="productDescription">Product Description</label>
-    <textarea id="productDescription" rows="3" formControlName="productDescription"></textarea>
+    <label>Quantity</label>
+    <input type="text" formControlName="quantity" />
   </div>
 
   <div>
-    <label for="quantity">Quantity</label>
-    <input id="quantity" type="number" formControlName="quantity" />
+    <label>Price</label>
+    <input type="text" formControlName="price" />
   </div>
 
-  <div>
-    <label for="price">Price</label>
-    <input id="price" type="number" step="0.01" formControlName="price" />
-  </div>
-
-  <button type="submit" [disabled]="productForm.invalid">Submit</button>
+  <button type="submit" [disabled]="productForm.invalid">Save</button>
 </form>
-
-<div *ngIf="createdProduct">
-  <pre>{{ createdProduct | json }}</pre>
-</div>

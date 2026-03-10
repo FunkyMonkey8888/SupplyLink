@@ -5,6 +5,7 @@ export class Warehouse {
   warehouseName: string;
   location: string;
   capacity: number;
+  // displayInfo?(): void;
 
   constructor(
     warehouseId: number,
@@ -20,7 +21,7 @@ export class Warehouse {
     this.capacity = capacity;
   }
 
-  displayInfo(): void {
+  displayInfo?(): void {
     console.log(
       `Warehouse ID: ${this.warehouseId}, Supplier ID: ${this.supplier}, Capacity: ${this.capacity}`
     );

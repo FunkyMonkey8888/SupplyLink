@@ -14,9 +14,11 @@ import { AuthInterceptor } from './auth.interceptors';
     HttpClientModule,
     AppRoutingModule 
   ],
-  providers: [AuthInterceptor
+  providers: [
+    AuthInterceptor
     
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {}

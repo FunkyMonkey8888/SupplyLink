@@ -1,31 +1,77 @@
+// import { NgModule } from "@angular/core";
+// import { CommonModule } from "@angular/common";
+
+// import { SupplyLinkRoutingModule } from "./supplylink-routing.module";
+// import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+// import { HttpClientModule } from "@angular/common/http";
+// import { ProductComponent } from "./components/product/product.component";
+// import { SupplierComponent } from "./components/supplier/supplier.component";
+// import { WarehouseComponent } from "./components/warehouse/warehouse.component";
+// import { SharedModule } from "../shared/shared.module";
+// import { DashboardComponent } from "./components/dashboard/dashboard.component";
+// import { WarehouseEditComponent } from "./components/warehouseedit/warehouseedit.component";
+// import { SupplierEditComponent } from "./components/supplieredit/supplieredit.component";
+// import { RouterModule } from "@angular/router";
+
+// @NgModule({
+//   declarations: [
+//     // ProductComponent,
+//     // SupplierComponent,
+//     // WarehouseComponent,
+//     // DashboardComponent,
+//     // WarehouseEditComponent,
+//     // SupplierEditComponent
+//   ],
+//   imports: [
+//     CommonModule,
+//     SupplyLinkRoutingModule,
+//     ReactiveFormsModule,
+//     HttpClientModule,
+//     RouterModule,
+//     FormsModule,
+//     SharedModule,
+//   ],
+//   exports: [
+    
+//   ]
+// })
+// export class SupplyLinkModule {}
+
+
+// src/app/supplylink/supplylink.module.ts
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import { RouterModule } from "@angular/router";
 
 import { SupplyLinkRoutingModule } from "./supplylink-routing.module";
-import { ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
-import { ProductComponent } from "./components/product/product.component";
+import { SharedModule } from "../shared/shared.module";
+
+import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { SupplierComponent } from "./components/supplier/supplier.component";
 import { WarehouseComponent } from "./components/warehouse/warehouse.component";
-import { SharedModule } from "../shared/shared.module";
-import { DashboardComponent } from "./components/dashboard/dashboard.component";
+import { ProductComponent } from "./components/product/product.component";
+import { SupplierEditComponent } from "./components/supplieredit/supplieredit.component";
+import { WarehouseEditComponent } from "./components/warehouseedit/warehouseedit.component";
 
 @NgModule({
   declarations: [
-    ProductComponent,
+    DashboardComponent,
     SupplierComponent,
     WarehouseComponent,
-    DashboardComponent,
+    ProductComponent,
+    SupplierEditComponent,
+    WarehouseEditComponent
   ],
   imports: [
     CommonModule,
-    SupplyLinkRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SharedModule
-  ],
-  exports: [
-    
+    RouterModule,
+    SharedModule,
+    SupplyLinkRoutingModule
   ]
 })
 export class SupplyLinkModule {}

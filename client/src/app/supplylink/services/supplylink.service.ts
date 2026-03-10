@@ -7,30 +7,33 @@ import { environment } from '../../../environments/environment';
 
 export interface Supplier {
   id?: number;
-  name: string;
+  name?: string;
   email: string;
   phone: string;
   address?: string;
   username?: string;
   password?: string;
-  role?: 'ADMIN' | 'USER';
+  role?: string;
+  displayInfo?(): void;
 }
 
 export interface Warehouse {
   id?: number;
-  supplierId: number;
+  supplierId?: number;
   warehouseName: string;
   location?: string;
   capacity: number;
+  displayInfo?(): void;
 }
 
 export interface Product {
   id?: number;
   productName: string;
   productDescription?: string;
-  warehouseId: number;
+  warehouseId?: number;
   quantity: number;
   price: number;
+  displayInfo?(): void;
 }
 
 @Injectable({ providedIn: 'root' })

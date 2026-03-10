@@ -1,0 +1,30 @@
+<h3>Edit Supplier</h3>
+<form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" style="display:grid;gap:.5rem;max-width:420px;">
+  <label>Name</label>
+  <input type="text" formControlName="name" />
+
+  <input type="hidden" formControlName="supplierName" />
+
+  <label>Email</label>
+  <input type="email" formControlName="email" />
+
+  <label>Phone</label>
+  <input type="text" formControlName="phone" />
+
+  <label>Address</label>
+  <input type="text" formControlName="address" />
+
+  <label>Username</label>
+  <input type="text" formControlName="username" />
+
+  <label>Password</label>
+  <input type="text" formControlName="password" />
+
+  <label>Role</label>
+  <select formControlName="role">
+    <option value="USER">USER</option>
+    <option value="ADMIN">ADMIN</option>
+  </select>
+
+  <button type="submit" [disabled]="supplierForm.invalid">Save</button>
+</form>

@@ -25,7 +25,7 @@ export class Product {
   }
 
 
-  displayInfo(): void {
+  displayInfo?(): void {
     console.log(`Product ID: ${this.productId}`);
     console.log(`Warehouse : ${this.warehouse}`);
     console.log(`quantity: ${this.quantity}`);

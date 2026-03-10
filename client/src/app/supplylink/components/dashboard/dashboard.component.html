@@ -1,5 +1,5 @@
 <!-- src/app/supplylink/components/dashboard.component.html -->
-<app-navbar></app-navbar>
+<!-- <app-navbar></app-navbar>
 
 <div *ngIf="role === 'ADMIN'; else notAdmin">
   <h2>Admin Dashboard</h2>
@@ -58,4 +58,173 @@
 <ng-template #notAdmin>
   <app-navbar></app-navbar>
   <p>Dashboard is available only for ADMIN role.</p>
+</ng-template> -->
+
+
+
+<!-- src/app/supplylink/components/dashboard.component.html -->
+
+<app-navbar></app-navbar>
+
+<div *ngIf="role === 'ADMIN'; else userView">
+  <h2>Admin Dashboard</h2>
+
+  <!-- Suppliers -->
+  <section>
+    <h3>Suppliers</h3>
+    <div *ngIf="!suppliers || suppliers.length === 0">No suppliers found.</div>
+    <table *ngIf="suppliers && suppliers.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Email</th><th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of suppliers">
+          <td>{{ s.id }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Warehouses -->
+  <section>
+    <h3>Warehouses</h3>
+    <div *ngIf="!warehouses || warehouses.length === 0">No warehouses found.</div>
+    <table *ngIf="warehouses && warehouses.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Supplier</th><th>Capacity</th><th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let w of warehouses">
+          <td>{{ w.id ?? w.warehouseId }}</td>
+          <td>{{ w.warehouseName }}</td>
+          <td>{{ w.supplierId }}</td>
+          <td>{{ w.capacity }}</td>
+          <td>{{ w.location }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <section>
+    <h3>Products</h3>
+    <div *ngIf="!products || products.length === 0">No products found.</div>
+    <table *ngIf="products && products.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Warehouse</th><th>Qty</th><th>Price</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>{{ p.id ?? p.productId }}</td>
+          <td>{{ p.productName }}</td>
+          <td>{{ p.warehouseId }}</td>
+          <td>{{ p.quantity }}</td>
+          <td>{{ p.price | currency:'INR':'symbol-narrow' }}</td>
+          <td>
+            <button type="button" (click)="editProduct(p)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+
+<ng-template #userView>
+  <h2>Supplier Dashboard</h2>
+
+  <section *ngIf="suppliers && suppliers.length > 0">
+    <h3>Supplier Details</h3>
+    <p><strong>Name:</strong> {{ suppliers[0]?.name }}</p>
+    <p><strong>Email:</strong> {{ suppliers[0]?.email }}</p>
+    <p><strong>Phone:</strong> {{ suppliers[0]?.phone }}</p>
+  </section>
+
+
+  <section>
+    <h3>Your Warehouses</h3>
+    <div *ngIf="!warehouses || warehouses.length === 0">No warehouses.</div>
+    <ul *ngIf="warehouses && warehouses.length > 0">
+      <li *ngFor="let w of warehouses">
+        {{ w.warehouseName }}
+        <span *ngIf="w.capacity"> (capacity: {{ w.capacity }})</span>
+        <span *ngIf="w.location"> — {{ w.location }}</span>
+      </li>
+    </ul>
+  </section>
+
+
+  <section>
+    <h3>Products in Selected Warehouse</h3>
+
+    <div *ngIf="warehouses && warehouses.length > 0" style="margin-bottom: 8px;">
+      <label for="whSelect"><strong>Warehouse:</strong></label>
+      <select
+        id="whSelect"
+        [ngModel]="selectedWarehouseId"
+        (ngModelChange)="selectedWarehouseId = $event; refreshProductsForSelectedWarehouse()">
+        <option *ngFor="let w of warehouses" [ngValue]="w.id ?? w.warehouseId">
+          {{ w.warehouseName }}
+        </option>
+      </select>
+    </div>
+
+    <div *ngIf="!products || products.length === 0">No products.</div>
+    <table *ngIf="products && products.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead>
+        <tr>
+          <th>Name</th><th>Qty</th><th>Price</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>{{ p.productName }}</td>
+          <td>{{ p.quantity }}</td>
+          <td>{{ p.price }}</td>
+          <td>
+            <button type="button" (click)="editProduct(p)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </ng-template>
+
+<div
+  *ngIf="showProductPopup"
+  style="position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 1000;"
+  aria-modal="true"
+  role="dialog"
+>
+  <div style="background: #fff; padding: 16px; width: 480px; max-width: 95vw; border-radius: 6px;">
+    <h3 style="margin-top: 0;">{{ currentProduct ? 'Update Product' : 'Add Product' }}</h3>
+
+    <form [formGroup]="productForm" (ngSubmit)="onProductFormSubmit()" style="display: grid; gap: .5rem;">
+      <label>Product Name</label>
+      <input type="text" formControlName="productName" />
+
+      <label>Description</label>
+      <input type="text" formControlName="productDescription" />
+
+      <label>Quantity</label>
+      <input type="text" formControlName="quantity" />
+
+      <label>Price</label>
+      <input type="text" formControlName="price" />
+
+      <div style="display: flex; gap: .5rem; margin-top: .5rem;">
+        <button type="submit" [disabled]="productForm.invalid">Save</button>
+        <button type="button" (click)="showProductPopup = false; currentProduct = null">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

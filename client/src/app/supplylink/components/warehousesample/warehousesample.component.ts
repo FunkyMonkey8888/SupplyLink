@@ -11,17 +11,16 @@ import { Warehouse } from '../../types/Warehouse';
   styleUrls: ['./warehousesample.component.css']
 })
 export class WarehouseSampleComponent {
-  warehouse: Warehouse;
+  // warehouse: Warehouse;
 
-  constructor() {
+  // constructor() {
 
-    this.warehouse = new Warehouse(
-      12,                // warehouseId: number
-      '1',               // supplierId: string
-      'Central Depot',   // warehouseName: string
-      'Chennai',         // location: string
-      5000               // capacity: number
-    );
-  }
+  //   this.warehouse = new Warehouse(
+  //     12,                // warehouseId: number
+  //     '1',               // supplierId: string
+  //     'Central Depot',   // warehouseName: string
+  //     'Chennai',         // location: string
+  //     5000               // capacity: number
+  //   );
+  // }
 }
-``

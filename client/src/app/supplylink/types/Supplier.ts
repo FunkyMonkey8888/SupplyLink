@@ -29,7 +29,7 @@ export class Supplier {
   }
 
 
-  displayInfo(): void {
+  displayInfo?(): void {
     console.log(`Supplier ID: ${this.supplierId}`);
     console.log(`Supplier name: ${this.supplierName}`);
     console.log(`email: ${this.email}`);
