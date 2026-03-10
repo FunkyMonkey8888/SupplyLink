@@ -1,20 +1,20 @@
 import { Supplier } from "./Supplier";
 export class Warehouse {
   warehouseId: number;
-  supplierId: string;
+  supplier: Supplier;
   warehouseName: string;
   location: string;
   capacity: number;
 
   constructor(
     warehouseId: number,
-    supplierId: string,
+    supplier: Supplier,
     warehouseName: string,
     location: string,
     capacity: number
   ) {
     this.warehouseId = warehouseId;
-    this.supplierId = supplierId;
+    this.supplier = supplier;
     this.warehouseName = warehouseName;
     this.location = location;
     this.capacity = capacity;
@@ -22,7 +22,7 @@ export class Warehouse {
 
   displayInfo(): void {
     console.log(
-      `Warehouse ID: ${this.warehouseId}, Supplier ID: ${this.supplierId}, Capacity: ${this.capacity}`
+      `Warehouse ID: ${this.warehouseId}, Supplier ID: ${this.supplier}, Capacity: ${this.capacity}`
     );
   }
 }

@@ -1,32 +1,54 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { map, Observable } from "rxjs";
-// import { User } from "../types/user";
-import { Supplier } from "../../supplylink/types/Supplier";
+// src/app/auth/services/auth.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
+type LoginPayload = { username: string; password: string };
+export type LoginResponse = { token: string; role?: 'ADMIN' | 'USER' };
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  
+  private readonly base = 'http://localhost:9876/context.html/user';
+  private readonly tokenKey = 'token';
+  private readonly roleKey = 'auth_role';
+  private role$ = new BehaviorSubject<string | null>(this.getRole());
 
- 
   constructor(private http: HttpClient) {}
 
-  login(user: Partial<Supplier>): Observable<{ [key: string]: string }> {
-    return new Observable();
+  login(payload: LoginPayload): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.base}/login`, payload).pipe(
+      tap(res => {
+        if (res?.token) localStorage.setItem(this.tokenKey, res.token);
+        const role = res?.role ?? 'USER';
+        localStorage.setItem(this.roleKey, role);
+        this.role$.next(role);
+      })
+    );
   }
 
-  getToken() : string {
-    return '';
+  createUser(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.base}/register`, payload);
   }
 
-  getRole() : string {
-    return '';
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.roleKey);
+    this.role$.next(null);
   }
 
-  getUsers(): Observable<Supplier[]> {
-    return new Observable();
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
   }
 
-  createUser(user: Supplier): Observable<Supplier> {
-    return new Observable();
+  getRole(): string | null {
+    return localStorage.getItem(this.roleKey);
+  }
+
+  roleChanges(): Observable<string | null> {
+    return this.role$.asObservable();
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
   }
 }
