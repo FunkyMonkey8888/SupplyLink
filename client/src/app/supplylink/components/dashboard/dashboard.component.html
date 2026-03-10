@@ -1,0 +1,61 @@
+<!-- src/app/supplylink/components/dashboard.component.html -->
+<app-navbar></app-navbar>
+
+<div *ngIf="role === 'ADMIN'; else notAdmin">
+  <h2>Admin Dashboard</h2>
+
+  <section>
+    <h3>Suppliers</h3>
+    <div *ngIf="!suppliers || suppliers.length === 0">No suppliers found.</div>
+    <table *ngIf="suppliers && suppliers.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let s of suppliers">
+          <td>{{ s.id }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>Warehouses</h3>
+    <div *ngIf="!warehouses || warehouses.length === 0">No warehouses found.</div>
+    <table *ngIf="warehouses && warehouses.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead><tr><th>ID</th><th>Name</th><th>Supplier</th><th>Capacity</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let w of warehouses">
+          <td>{{ w.id }}</td>
+          <td>{{ w.warehouseName }}</td>
+          <td>{{ w.supplierId }}</td>
+          <td>{{ w.capacity }}</td>
+          <td>{{ w.location }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>Products</h3>
+    <div *ngIf="!products || products.length === 0">No products found.</div>
+    <table *ngIf="products && products.length > 0" border="1" cellspacing="0" cellpadding="4">
+      <thead><tr><th>ID</th><th>Name</th><th>Warehouse</th><th>Qty</th><th>Price</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>{{ p.id }}</td>
+          <td>{{ p.productName }}</td>
+          <td>{{ p.warehouseId }}</td>
+          <td>{{ p.quantity }}</td>
+          <td>{{ p.price | currency:'INR':'symbol-narrow' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<ng-template #notAdmin>
+  <app-navbar></app-navbar>
+  <p>Dashboard is available only for ADMIN role.</p>
+</ng-template>
