@@ -10,7 +10,7 @@ import { NavBarComponent } from './navbar/navbar.component';
   ],
   imports: [
     CommonModule,
-    // AuthModule,
+    AuthModule,
     RouterModule
   ],
   exports: [

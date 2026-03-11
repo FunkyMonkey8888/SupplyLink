@@ -38,80 +38,80 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class SupplyLinkService {
-  // Not essential for tests, but here for completeness
-  // baseUrl = environment.apiBaseUrl;
+  
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   // ---------- Supplier ----------
   addSupplier(supplier: Supplier): Observable<any> {
-    return this.http.post<any>(`suppliers`, supplier);
+    return this.http.post<any>(`${environment.apiUrl}/suppliers`, supplier);
   }
 
   editSupplier(supplier: Supplier): Observable<any> {
-    return this.http.put<any>(`suppliers/${supplier.id}`, supplier);
+    return this.http.put<any>(`${environment.apiUrl}/suppliers/${supplier.id}`, supplier);
   }
 
   deleteSupplier(supplierId: number): Observable<any> {
-    return this.http.delete<any>(`suppliers/${supplierId}`);
+    return this.http.delete<any>(`${environment.apiUrl}/suppliers/${supplierId}`);
   }
 
   getSupplierById(supplierId: number): Observable<Supplier> {
-    return this.http.get<Supplier>(`suppliers/${supplierId}`);
+    return this.http.get<Supplier>(`${environment.apiUrl}/suppliers/${supplierId}`);
   }
 
   getAllSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(`suppliers`);
+    return this.http.get<Supplier[]>(`${environment.apiUrl}/suppliers`);
   }
 
   // ---------- Warehouse ----------
   addWarehouse(warehouse: Warehouse): Observable<any> {
-    return this.http.post<any>(`warehouses`, warehouse);
+    return this.http.post<any>(`${environment.apiUrl}/warehouses`, warehouse);
   }
 
   editWarehouse(warehouse: Warehouse): Observable<any> {
-    return this.http.put<any>(`warehouses/${warehouse.id}`, warehouse);
+    return this.http.put<any>(`${environment.apiUrl}/warehouses/${warehouse.id}`, warehouse);
   }
 
   deleteWarehouse(warehouseId: number): Observable<any> {
-    return this.http.delete<any>(`warehouses/${warehouseId}`);
+    return this.http.delete<any>(`${environment.apiUrl}/warehouses/${warehouseId}`);
   }
 
   getWarehouseById(warehouseId: number): Observable<Warehouse> {
-    return this.http.get<Warehouse>(`warehouses/${warehouseId}`);
+    return this.http.get<Warehouse>(`${environment.apiUrl}/warehouses/${warehouseId}`);
   }
 
   getAllWarehouses(): Observable<Warehouse[]> {
-    return this.http.get<Warehouse[]>(`warehouses`);
+    return this.http.get<Warehouse[]>(`${environment.apiUrl}/warehouses`);
   }
 
   getWarehousesBySupplier(supplierId: number): Observable<Warehouse[]> {
-    return this.http.get<Warehouse[]>(`suppliers/${supplierId}/warehouses`);
+    return this.http.get<Warehouse[]>(`${environment.apiUrl}/suppliers/${supplierId}/warehouses`);
   }
 
   // ---------- Product ----------
   addProduct(product: Product): Observable<any> {
-    return this.http.post<any>(`products`, product);
+    return this.http.post<any>(`${environment.apiUrl}/products`, product);
   }
 
   editProduct(product: Product): Observable<any> {
-    return this.http.put<any>(`products/${product.id}`, product);
+    return this.http.put<any>(`${environment.apiUrl}/products/${product.id}`, product);
   }
 
   deleteProduct(productId: number): Observable<any> {
-    return this.http.delete<any>(`products/${productId}`);
+    return this.http.delete<any>(`${environment.apiUrl}/products/${productId}`);
   }
 
   getProductById(productId: number): Observable<Product> {
-    return this.http.get<Product>(`products/${productId}`);
+    return this.http.get<Product>(`${environment.apiUrl}/products/${productId}`);
   }
 
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`products`);
+    return this.http.get<Product[]>(`${environment.apiUrl}/products`);
   }
 
   getAllProductsByWarehouse(warehouseId: number | null): Observable<Product[]> {
-    const target = warehouseId == null ? 'products' : `warehouses/${warehouseId}/products`;
+    const target = warehouseId == null ? `${environment.apiUrl}/products` : `${environment.apiUrl}/warehouses/${warehouseId}/products`;
     return this.http.get<Product[]>(target);
   }
 }

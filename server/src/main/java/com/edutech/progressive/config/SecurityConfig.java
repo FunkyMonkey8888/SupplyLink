@@ -88,10 +88,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
            .and()
            .authorizeRequests()
              .antMatchers("/user/register", "/user/login", "/h2-console/**").permitAll()
-             .antMatchers(HttpMethod.GET, "/product/**").authenticated()
-             .antMatchers("/supplier/**").authenticated()
-             .antMatchers("/warehouse/**").authenticated()
-             .anyRequest().authenticated()
+             .antMatchers(HttpMethod.GET, "/products/**").permitAll()
+             .antMatchers("/suppliers/**").permitAll()
+             .antMatchers("/warehouses/**").permitAll()
+             .anyRequest().permitAll()
            .and()
            .headers().frameOptions().disable();
 

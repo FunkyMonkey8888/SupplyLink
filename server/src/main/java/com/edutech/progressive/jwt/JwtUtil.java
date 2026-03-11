@@ -3,10 +3,14 @@ package com.edutech.progressive.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,24 +23,27 @@ public class JwtUtil {
     private String secret;
 
     // @Value("${app.jwt.expiration-ms}")
-    private long expirationMs = 60* 60L;
+    private long expirationMs = 1000 * 60* 60L;
+
+
+    private Key key() {
+        // HS256 requires >= 256-bit key (32 bytes)
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generateToken(UserDetails userDetails, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        return createToken(claims, userDetails.getUsername());
-    }
 
-    private String createToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, secret) // jjwt 0.9.1 style
+                .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -68,9 +75,71 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }
+
+
+
+
+
+
+// package com.edutech.progressive.jwt;
+
+// import java.nio.charset.StandardCharsets;
+// import java.security.Key;
+// import java.util.Date;
+
+// import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.stereotype.Component;
+
+// import io.jsonwebtoken.Jwts;
+// import io.jsonwebtoken.SignatureAlgorithm;
+// import io.jsonwebtoken.security.Keys;
+
+// @Component
+// public class JwtUtil {
+
+//     @Value("${jwt.secret:supplylink-secret-key-should-be-at-least-32-bytes!}")
+//     private String secret; // plain text, NOT base64
+
+//     @Value("${jwt.expirationMillis:86400000}") // 1 day
+//     private long expirationMillis;
+
+//     private Key key() {
+//         // HS256 requires >= 256-bit (32-byte) key
+//         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+//     }
+
+//     public String generateToken(UserDetails user, String username) {
+//         Date now = new Date();
+//         Date exp = new Date(now.getTime() + expirationMillis);
+
+//         return Jwts.builder()
+//             .setSubject(username)
+//             .setIssuedAt(now)
+//             .setExpiration(exp)
+//             .signWith(key(), SignatureAlgorithm.HS256)
+//             .compact();
+//     }
+
+//     public String extractUsername(String token) {
+//         return Jwts.parserBuilder().setSigningKey(key()).build()
+//             .parseClaimsJws(token).getBody().getSubject();
+//     }
+
+//     public boolean validate(String token) {
+//         try {
+//             Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token);
+//             return true;
+//         } catch (Exception e) {
+//             return false;
+//         }
+//     }
+// }

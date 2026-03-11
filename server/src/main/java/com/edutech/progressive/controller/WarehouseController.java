@@ -57,7 +57,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/warehouse")
+@RequestMapping("/warehouses")
 public class WarehouseController {
 
     private final WarehouseServiceImplJpa warehouseServiceJpa;
@@ -75,7 +75,7 @@ public class WarehouseController {
 
 
     @GetMapping("/{warehouseId}")
-        @PreAuthorize("hasAuthority('USER')")
+        // @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable int warehouseId) {
         Warehouse w = warehouseServiceJpa.getWarehouseById(warehouseId);
         if (w == null) {
@@ -86,7 +86,7 @@ public class WarehouseController {
 
     @PostMapping
     // @PreAuthorize("hasAuthority('USER')")
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    // @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<Integer> addWarehouse(@RequestBody Warehouse warehouse) {
         // if(warehouse.getSupplier()== null) return ResponseEntity.status(404).build();
         int id = warehouseServiceJpa.addWarehouse(warehouse);
@@ -95,7 +95,7 @@ public class WarehouseController {
 
 
     @PutMapping("/{warehouseId}")
-    @PreAuthorize("hasAuthority('USER')")
+    // @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> updateWarehouse(@PathVariable int warehouseId, @RequestBody Warehouse warehouse) {
         warehouse.setWarehouseId(warehouseId);
         warehouseServiceJpa.updateWarehouse(warehouse);
@@ -106,7 +106,7 @@ public class WarehouseController {
     @DeleteMapping("/{warehouseId}")
    
     // @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable int warehouseId) {
         warehouseServiceJpa.deleteWarehouse(warehouseId);
         return ResponseEntity.noContent().build();
