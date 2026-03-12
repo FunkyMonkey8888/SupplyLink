@@ -31,17 +31,17 @@ export class LoginComponent {
     };
 
     this.auth.login(payload).subscribe({
-      next: (res: { token: string; roles?: string[]; userId?: number }) => {
+      next: (res: { token: string; roles?: string; userId?: number }) => {
         this.loading = false;
 
   
         if (res?.token) localStorage.setItem('token', res.token);
-        const role = (res?.roles && res.roles[0]) || 'USER';
+        const role = ((res?.roles) ?? 'USER').toUpperCase();
         localStorage.setItem('auth_role', role);
         if (res?.userId != null) localStorage.setItem('userId', String(res.userId));
 
-        // Navigate by role
-        this.router.navigate([role === 'ADMIN' ? '/dashboard/admin' : '/dashboard']);
+
+        this.router.navigateByUrl('/supplylink/dashboard');
       },
       error: (err) => {
         this.loading = false;

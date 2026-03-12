@@ -48,7 +48,10 @@ public class LoginController {
         // return null;
         Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         UserDetails principal = (UserDetails) auth.getPrincipal();
-        String token = jwt.generateToken(principal, loginRequest.getUsername());
-        return ResponseEntity.status(200).body(new LoginResponse(token));
+        Supplier s = loginService.getSupplierByName(principal.getUsername());
+        String dbRole = s.getRole().toUpperCase();
+        Integer userId = s.getSupplierId();
+        String token = jwt.generateToken(principal, dbRole);
+        return ResponseEntity.status(200).body(new LoginResponse(token, dbRole, userId));
     }
 }

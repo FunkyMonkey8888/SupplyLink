@@ -13,11 +13,17 @@
 
 
 <!-- src/app/shared/navbar/navbar.component.html -->
-<nav style="display:flex;gap:12px;align-items:center;padding:8px 0;">
+<!-- <nav style="display:flex;gap:12px;align-items:center;padding:8px 0;">
   <a routerLink="/supplylink">Dashboard</a>
-  <a *ngIf="role !== 'USER'" routerLink="/supplylink/suppliers">Add Supplier</a>
+  <a *ngIf="role !== 'USER'" routerLink="/supplylink/suppliers" routerLinkActive = "active">Add Supplier</a>
   <a *ngIf="role !== 'USER'" routerLink="/supplylink/warehouses">Add Warehouse</a>
   <span style="flex:1 1 auto;"></span>
   <a routerLink="/auth/logout">Logout</a>
 </nav>
-<hr />
+<hr /> -->
+
+<a routerLink="/supplylink/dashboard">Dashboard</a>
+<!-- <a routerLink="/supplylink/suppliers">Suppliers</a> -->
+<a routerLink="/supplylink/warehouses">Warehouses</a>
+<a routerLink="/supplylink/products">Products</a>
+<a routerLink="/auth/login">Logout</a>

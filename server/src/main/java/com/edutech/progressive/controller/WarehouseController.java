@@ -113,7 +113,6 @@ public class WarehouseController {
     }
 
     @GetMapping("/supplier/{supplierId}")
-
     public ResponseEntity<List<Warehouse>> getWarehousesBySupplier(@PathVariable int supplierId)  {
         List<Warehouse> list;
         try {

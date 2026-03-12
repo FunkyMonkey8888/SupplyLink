@@ -102,7 +102,7 @@ public class SupplierController {
 
     @PostMapping
     // @Secured({ "ROLE_ADMIN"})
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Integer> addSupplier(@RequestBody Supplier supplier) {
         int id;
         try {
@@ -124,7 +124,7 @@ public class SupplierController {
     @PutMapping("/{supplierId}")
 // @Secured({ "ROLE_ADMIN"})
         // @PreAuthorize("hasAnyRole('ADMIN')")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> updateSupplier(@PathVariable int supplierId,
                                                @RequestBody Supplier supplier) {
         try {
@@ -144,7 +144,7 @@ public class SupplierController {
     @DeleteMapping("/{supplierId}")
 // @Secured({ "ROLE_ADMIN"})
     // @PreAuthorize("hasAnyRole('ADMIN')")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteSupplier(@PathVariable int supplierId) throws SupplierDoesNotExistException {
         if(supplierServiceJpa.getSupplierById(supplierId)== null) return ResponseEntity.status(404).build();
         supplierServiceJpa.deleteSupplier(supplierId);

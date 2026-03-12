@@ -36,7 +36,7 @@ public class SupplierServiceImplJpa implements SupplierService  {
 
     
     @Override
-    @Secured({"ROLE_ADMIN"})
+    // @Secured({"ROLE_ADMIN"})
     public int addSupplier(Supplier supplier) throws SupplierAlreadyExistsException {
         // If client sends an id that already exists, treat as duplicate
         if (supplier.getSupplierId() != 0 &&

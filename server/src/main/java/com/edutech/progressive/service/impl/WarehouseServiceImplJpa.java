@@ -43,18 +43,34 @@ public class WarehouseServiceImplJpa implements WarehouseService  {
 
     }
 
-    @Override
-    public int addWarehouse(Warehouse warehouse) {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'addWarehouse'");
+    // @Override
+    // public int addWarehouse(Warehouse warehouse) {
 
-        
-        // Supplier supplier = supplierRepository.findById(warehouse.supplierId)
-        // .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + dto.supplierId));
     
 
-        return warehouseRepository.save(warehouse)!= null ? warehouse.getWarehouseId() :-1;
-    }
+    //     return warehouseRepository.save(warehouse)!= null ? warehouse.getWarehouseId() :-1;// In your WarehouseController or inside addWarehouse service – before saving:
+
+
+
+    // }
+
+    
+@Override
+    public int addWarehouse(Warehouse warehouse) {
+        if (warehouse == null) return -1;
+        if (warehouse.getSupplier() == null || warehouse.getSupplier().getSupplierId() == 0) {
+            throw new IllegalArgumentException("supplier.supplierId is required");
+        }
+
+        Supplier supplier = supplierRepository.findById(warehouse.getSupplier().getSupplierId())
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Supplier not found: " + warehouse.getSupplier().getSupplierId()));
+
+        warehouse.setSupplier(supplier); // attach managed entity
+        Warehouse saved = warehouseRepository.save(warehouse);
+        return saved != null ? saved.getWarehouseId() : -1;
+}
+
 
     @Override
     public List<Warehouse> getWarehousesSortedByCapacity() {

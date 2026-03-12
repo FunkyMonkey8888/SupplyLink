@@ -1,34 +1,60 @@
 <!-- src/app/supplylink/components/product/product.component.html -->
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Warehouse</label>
-    <select formControlName="warehouse">
-      <option [ngValue]="null">-- select --</option>
-      <option *ngFor="let w of (warehouses | async)" [ngValue]="w">
-        {{ w?.warehouseName }}
-      </option>
-    </select>
-  </div>
+ <app-navbar></app-navbar>
+<div class="container py-3">
+  <h2 class="mb-3">Create Product</h2>
 
-  <div>
-    <label>Product Name</label>
-    <input type="text" formControlName="productName" />
-  </div>
+  <div class="alert alert-success py-2" *ngIf="(productSuccess | async) as ok">{{ ok }}</div>
+  <div class="alert alert-danger py-2" *ngIf="(productError | async) as ko">{{ ko }}</div>
 
-  <div>
-    <label>Product Description</label>
-    <input type="text" formControlName="productDescription" />
-  </div>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Warehouse</label>
+      <select class="form-select" formControlName="warehouse">
+        <option [ngValue]="null">Select a warehouse</option>
+        <option *ngFor="let w of (warehouses | async)" [ngValue]="w">
+          {{ w?.warehouseName || ('Warehouse #' + (w?.id ?? w?.warehouseId)) }}
+        </option>
+      </select>
+      <div class="text-danger small" *ngIf="productForm.get('warehouse')?.invalid && productForm.get('warehouse')?.touched">
+        Warehouse is required
+      </div>
+    </div>
 
-  <div>
-    <label>Quantity</label>
-    <input type="text" formControlName="quantity" />
-  </div>
+    <div class="mb-3">
+      <label class="form-label">Product Name</label>
+      <input type="text" class="form-control" formControlName="productName" />
+      <div class="text-danger small" *ngIf="productForm.get('productName')?.invalid && productForm.get('productName')?.touched">
+        Product name is required
+      </div>
+    </div>
 
-  <div>
-    <label>Price</label>
-    <input type="text" formControlName="price" />
-  </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" rows="3" formControlName="productDescription"></textarea>
+    </div>
 
-  <button type="submit" [disabled]="productForm.invalid">Save</button>
-</form>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Quantity</label>
+        <input type="number" class="form-control" formControlName="quantity" />
+        <div class="text-danger small" *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched">
+          Quantity must be a non‑negative number
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Price</label>
+        <input type="number" class="form-control" formControlName="price" />
+        <div class="text-danger small" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+          Price must be a positive number
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Create</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="productForm.reset({
+          warehouse: null, productName: '', productDescription: '', quantity: '', price: ''
+        })">Reset</button>
+    </div>
+  </form>
+</div>

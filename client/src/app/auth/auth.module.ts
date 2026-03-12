@@ -1,25 +1,4 @@
-// import { NgModule } from "@angular/core";
-// import { CommonModule } from "@angular/common";
-
-// import { AuthRoutingModule } from "./auth-routing.module";
-// import { ReactiveFormsModule } from "@angular/forms";
-// import { HttpClientModule } from "@angular/common/http";
-
-// @NgModule({
-//   declarations: [],
-//   imports: [
-//     CommonModule,
-//     AuthRoutingModule,
-//     ReactiveFormsModule,
-//     HttpClientModule,
-//   ],
-//   exports: [
-    
-//   ]
-// })
-// export class AuthModule {}
-
-
+// src/app/auth/auth.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +9,11 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { UserComponent } from './components/user/user.component';
 
 const routes: Routes = [
-  { path: '', component: AuthComponent, children: [
+  {
+    path: '',
+    component: AuthComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'user' },
       { path: 'login', component: LoginComponent },
       { path: 'logout', component: LogoutComponent },
       { path: 'user', component: UserComponent }

@@ -86,7 +86,7 @@ export class SupplyLinkService {
   }
 
   getWarehousesBySupplier(supplierId: number): Observable<Warehouse[]> {
-    return this.http.get<Warehouse[]>(`${environment.apiUrl}/suppliers/${supplierId}/warehouses`);
+    return this.http.get<Warehouse[]>(`${environment.apiUrl}/warehouses/supplier/${supplierId}`);
   }
 
   // ---------- Product ----------
